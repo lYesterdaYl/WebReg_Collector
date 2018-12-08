@@ -6,6 +6,14 @@
  * Time: 12:53 PM
  */
 
+error_reporting(E_ERROR);
+
+use PHPMailer\PHPMailer\PHPMailer;
+
+require 'include/PHPMailer/src/Exception.php';
+require 'include/PHPMailer/src/PHPMailer.php';
+require 'include/PHPMailer/src/SMTP.php';
+include_once("include/inc.php");
 
 function html_to_obj($html) {
     $dom = new DOMDocument();
@@ -56,5 +64,41 @@ function httpPost($url, $param, $post_file=false){
         return $sContent;
     } else {
         return false;
+    }
+}
+
+function send_email($info){
+    $info = json_decode($info, TRUE);
+    $from = $info['from'];
+    $to = $info['to'];
+    $name = $info['name'];
+    $title = $info['title'];
+    $message = $info['message'];
+    $from_user = $info['from_user'];
+    $from_password = $info['from_password'];
+
+    $mail             = new PHPMailer();
+    $mail->IsSMTP();
+//    $mail->SMTPDebug  = 2;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Host       = "smtp.gmail.com";
+    $mail->Port       = 465;
+    $mail->Username   = $from;
+    $mail->Password   = $from_password;
+
+    $mail->SetFrom($from, $name);
+
+    $mail->Subject    = $title;
+
+    $mail->MsgHTML($message);
+
+    $address = $to;
+    $mail->AddAddress($address, $title);
+
+    if(!$mail->Send()) {
+        echo "Mailer Error: " . $mail->ErrorInfo;
+    } else {
+        echo "Message sent!";
     }
 }
