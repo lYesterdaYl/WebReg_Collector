@@ -13,7 +13,6 @@ use PHPMailer\PHPMailer\PHPMailer;
 require 'include/PHPMailer/src/Exception.php';
 require 'include/PHPMailer/src/PHPMailer.php';
 require 'include/PHPMailer/src/SMTP.php';
-include_once("include/inc.php");
 
 function html_to_obj($html) {
     $dom = new DOMDocument();
@@ -96,9 +95,36 @@ function send_email($info){
     $address = $to;
     $mail->AddAddress($address, $title);
 
-    if(!$mail->Send()) {
-        echo "Mailer Error: " . $mail->ErrorInfo;
-    } else {
-        echo "Message sent!";
+    if($message != ""){
+        if(!$mail->Send()) {
+            echo "Mailer Error: " . $mail->ErrorInfo;
+        }
+        else {
+            echo "Message sent!";
+        }
     }
+
+}
+
+function result_anlysis($html, $mysqli){
+    $result = [];
+//    print_r($html);
+    $max = $html['children'][1]['children'][14]['children'][0]['children'][4]['children'][7]['html'];
+    $enter = $html['children'][1]['children'][14]['children'][0]['children'][4]['children'][8]['html'];
+//    $enter = 135;
+    $available = $max - $enter;
+    $sql = "insert into WebReg (max, current, available) VALUES (?,?,?)";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("iii", $max, $enter, $available);
+    $stmt->execute();
+
+    if($enter < $max){
+        $result['availability'] = TRUE;
+        $result['message'] = "Classes are available<br>"."Max: ".$max."<br> Enter: ".$enter."<br> Avaiable Spot: ".$available;
+    }
+    else{
+        $result['availability'] = False;
+        $result['message'] = "";
+    }
+    return $result;
 }
