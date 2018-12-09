@@ -8,27 +8,25 @@
 
 include_once("include/inc.php");
 include_once("include/function.php");
-
+//include_once("include/inc_ignore.php");
+//include('../../../../system_files/inc.php');
 
 $parData=array(
     'YearTerm'=>$year_term,
     'Breadth'=>"",
     'Dept'=>$department,
     'CourseCodes'=>$course_code,
+    'CoCourse' => $cocourse,
     'Submit'=>$submit
 );
 
-$datas=httpPost($urls,$parData);
-echo "<pre>";
-//print_r($datas);
-
-//$datas = explode(" ", $datas);
-//print_r($datas);
-
-
+$datas = httpPost($urls, $parData);
 
 $datas = html_to_obj($datas);
-print_r($datas);
-
-
+$result = result_anlysis($datas, $mysqli);
+$info['message'] = $result['message'];
+if($result['availability'] == TRUE){
+    // send email
+    send_email(json_encode($info));
+}
 
