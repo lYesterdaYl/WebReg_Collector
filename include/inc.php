@@ -6,6 +6,25 @@
  * Time: 12:51 PM
  */
 
+//database information
+$db_server = 'localhost:3306';
+$db_acc = 'root';
+$db_pwd = '';
+$db_name = '';
+$db_code = 'utf8';
+
+//connect to database
+$mysqli = @new mysqli($db_server, $db_acc, $db_pwd);
+
+if ($mysqli->connect_errno) {
+    die("could not connect to the database:\n" . $mysqli->connect_error);
+}
+$mysqli->query("set names " . $db_code);
+$select_db = $mysqli->select_db($db_name);
+if (!$select_db) {
+    die("could not connect to the db:\n" .  $mysqli->error);
+}
+
 //search information
 $urls = "https://www.reg.uci.edu/perl/WebSoc";
 $year_term = "2019-03";
