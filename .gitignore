@@ -1,2 +1,4 @@
 .idea
 include/PHPMailer
+include/inc_ignore.php
+test.php
