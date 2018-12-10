@@ -35,6 +35,7 @@ $course_code = "";                   //course id
 $submit = "Display Web Results";
 
 //email information
+$send_email = 1;    //send email if 1, not send email if 0
 $from = "";         //sender email
 $to = "";           //receiver email
 $name = "";         //sender name

@@ -27,6 +27,8 @@ $result = result_anlysis($datas, $mysqli);
 $info['message'] = $result['message'];
 if($result['availability'] == TRUE){
     // send email
-    send_email(json_encode($info));
+    if($send_email == 1){
+        send_email(json_encode($info));
+    }
 }
 
